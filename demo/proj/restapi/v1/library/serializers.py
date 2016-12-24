@@ -19,7 +19,7 @@ class BookUpdateSerializer(serializers.ModelSerializer):
 
 
 class LibrarySerializer(serializers.ModelSerializer):
-    books = BookSerializer(many=True)
+    books = BookSerializer(many=True, read_only=True)
 
     class Meta:
         fields = '__all__'

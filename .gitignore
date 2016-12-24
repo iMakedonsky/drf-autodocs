@@ -1,2 +1,4 @@
-.pyc
+*.pyc
 .idea/
+example/
+db.sqlite3
