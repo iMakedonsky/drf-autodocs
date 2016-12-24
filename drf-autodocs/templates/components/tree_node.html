@@ -1,0 +1,64 @@
+{% load drfdocs_filters %}
+{% for url_name, endpoint in tree.items %}
+    {% if endpoint|is_dict %}
+        <h1 id="{{ url_name|lower }}-group">{{url_name}}</h1>
+        <div style="margin-left: 50px; border-left: 10px solid red;">
+            {% if prefix %}
+                {% include 'rest_framework_docs/components/group_nester.html' with tree=endpoint prefix=prefix|add:"/"|add:url_name %}
+            {% else %}
+                {% include 'rest_framework_docs/components/group_nester.html' with tree=endpoint prefix=url_name %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="panel-group" role="tablist">
+            <div class="panel panel-default endpoint">
+
+                <div class="panel-heading" role="tab" data-toggle="collapse" data-target="#{{ endpoint.path|slugify }}">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h4 class="panel-title title">
+                                <i class="fa fa-link"></i> {{ prefix }}{{ endpoint.path }}
+                            </h4>
+                        </div>
+
+                        <div class="col-md-5">
+                            <ul class="list-inline methods">
+                                {% for method in endpoint.allowed_methods %}
+                                    <li class="method {{ method|lower }}">{{ method }}</li>
+                                {% endfor %}
+                                <li class="method plug"
+                                    data-toggle="modal"
+                                    data-path="{{ endpoint.path }}"
+                                    data-methods="{{ endpoint.allowed_methods }}"
+                                    data-permissions="{{ endpoint.permissions }}"
+                                    data-fields="{{ endpoint.fields_json }}">
+                                    <i class="fa fa-plug"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="{{ endpoint.path|slugify }}" class="panel-collapse collapse" role="tabpanel">
+                    <div class="panel-body">
+                        <p class="lead">{{ endpoint.docstring|markdown|keep_spacing }}</p>
+
+                        {% if endpoint.errors %}
+                            <div class="alert alert-danger" role="alert">Oops! There was something wrong with {{ endpoint.errors }}. Please check your code.</div>
+                        {% endif %}
+
+                        {% if endpoint.fields %}
+                            <p class="fields-desc">Fields:</p>
+                            {%include "rest_framework_docs/components/fields_list.html" with fields=endpoint.fields %}
+                        {% elif not endpoint.errors %}
+                            <p>No fields.</p>
+                        {% endif %}
+                        {% if endpoint.response_fields %}
+                            <p class="fields-desc">Response Fields:</p>
+                            {%include "rest_framework_docs/components/fields_list.html" with fields=endpoint.response_fields %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
