@@ -6,6 +6,8 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * tree-like structure
  * preserves formatting(spaces & new lines) in docstrings
  * markdown in docstrings
+ * choice field options
+ * specify MethodField output type for docs
 
 # Examples
 ![drf-autodocs](http://joxi.net/VrwzKWSO8BOkAX.jpg)

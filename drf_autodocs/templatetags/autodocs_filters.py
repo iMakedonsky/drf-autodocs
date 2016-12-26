@@ -31,3 +31,8 @@ def keep_spacing(value, autoescape=None):
 @register.filter()
 def is_endpoint(obj):
     return isinstance(obj, Endpoint)
+
+
+@register.filter()
+def is_method_field(obj):
+    return obj['type'] == 'SerializerMethodField'

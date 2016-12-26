@@ -1,9 +1,30 @@
+{% load autodocs_filters %}
+
 <ul class="field-list">
     {% for field in fields %}
     <li>
         {{ field.name }}: {{ field.type }}
+        {% if field|is_method_field %}
+             >> {{ field.help_text }}
+        {% endif %}
         {% if field.required %}
             <span class="new badge red" data-badge-caption="">Required</span>
+        {% endif %}
+        {% if field.choices %}
+            <table class="bordered choice-table push-right">
+                <thead>
+                    <th>Value</th>
+                    <th>Verbose Meaning</th>
+                </thead>
+                <tbody>
+                    {% for choice in field.choices.items %}
+                    <tr>
+                        <td>{{ choice.0 }}</td>
+                        <td>{{ choice.1 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
         {% if field.sub_fields %}
             {% include "drf_autodocs/components/fields_list.html" with fields=field.sub_fields %}

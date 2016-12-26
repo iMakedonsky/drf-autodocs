@@ -20,7 +20,11 @@ class BookUpdateSerializer(serializers.ModelSerializer):
 
 class LibrarySerializer(serializers.ModelSerializer):
     books = BookSerializer(many=True)
+    has_books = serializers.SerializerMethodField(help_text='returns Bool')
 
     class Meta:
-        fields = '__all__'
+        fields = ('books', 'has_books', 'name', 'type')
         model = Library
+
+    def get_has_books(self, instance):
+        return bool(instance.books)

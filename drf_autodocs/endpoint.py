@@ -1,7 +1,7 @@
-from rest_framework.serializers import BaseSerializer
+from rest_framework.serializers import BaseSerializer, ChoiceField, RelatedField, ManyRelatedField
 from inspect import getdoc
 from django.contrib.admindocs.views import simplify_regex
-from django.urls import reverse, resolve
+
 
 
 class Endpoint:
@@ -39,14 +39,17 @@ class Endpoint:
                     sub_fields = self._get_serializer_fields(field.child) if isinstance(field, BaseSerializer) else None
                 else:
                     sub_fields = self._get_serializer_fields(field) if isinstance(field, BaseSerializer) else None
-
-                fields.append({
+                field_data = {
                     "name": key,
                     "type": str(field.__class__.__name__),
                     "sub_fields": sub_fields,
                     "required": field.required,
-                    "to_many_relation": to_many_relation
-                })
+                    "to_many_relation": to_many_relation,
+                    "help_text": field.help_text
+                }
+                if isinstance(field, ChoiceField) and not isinstance(field, (RelatedField, ManyRelatedField)):
+                    field_data['choices'] = field.choices
+                fields.append(field_data)
 
         return fields
 
