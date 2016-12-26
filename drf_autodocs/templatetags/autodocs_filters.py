@@ -1,23 +1,20 @@
+import markdown
 from rest_framework.utils.formatting import markup_description
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe, SafeData
 from django.utils.text import normalize_newlines
 from django.utils.html import escape
+from ..endpoint import Endpoint
 
 
 register = template.Library()
 
 
-@register.filter(name='markdown')
+@register.filter(name='markdownify')
 @stringfilter
-def markdown(value):
+def markdownify(value):
     return markup_description(value)
-
-
-@register.filter(name='is_dict')
-def is_dict(obj):
-    return isinstance(obj, dict)
 
 
 @register.filter(is_safe=True, needs_autoescape=True, name='keep_formatting')
@@ -29,3 +26,8 @@ def keep_spacing(value, autoescape=None):
         value = escape(value)
     value = mark_safe(value.replace('  ', ' &nbsp;').replace('\t', '&emsp;'))
     return mark_safe(value.replace('\n', '<br />'))
+
+
+@register.filter()
+def is_endpoint(obj):
+    return isinstance(obj, Endpoint)

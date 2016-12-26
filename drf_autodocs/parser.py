@@ -5,10 +5,13 @@ from django.core.urlresolvers import RegexURLResolver, RegexURLPattern
 from addict import Dict
 from rest_framework.views import APIView
 from .endpoint import Endpoint
+from django.contrib.admindocs.views import simplify_regex
 
 
-class APIParser:
-
+class BaseAPIParser:
+    """
+    Class to iherit other parsers from
+    """
     def __init__(self, patterns=None):
         self.patterns = patterns
         if not patterns:
@@ -28,10 +31,11 @@ class APIParser:
 
     @staticmethod
     def _is_drf_pattern(pattern):
-        return isinstance(pattern.callback, APIView)
+        if hasattr(pattern.callback, 'view_class'):
+            return issubclass(pattern.callback.view_class, APIView)
 
 
-class TreeAPIParser(APIParser):
+class TreeAPIParser(BaseAPIParser):
     """
     Creates a nice tree of API
     """
@@ -42,18 +46,19 @@ class TreeAPIParser(APIParser):
     def parse(self):
         self.parse_tree(self.patterns, self.endpoints_tree)
 
-    def parse_tree(self, urlpatterns, parent_node):
+    def parse_tree(self, urlpatterns, parent_node, prefix=''):
         for pattern in urlpatterns:
             if isinstance(pattern, RegexURLResolver):
-                child_node_name = pattern.app_name or pattern._regex.replace('^', '').replace('/', '').replace('$', '')
-                parent_node[child_node_name] = Dict()
+                child_node_name = simplify_regex(pattern._regex).strip('/')
                 self.parse_tree(
                     urlpatterns=pattern.url_patterns,
-                    parent_node=parent_node[child_node_name]
+                    parent_node=parent_node[child_node_name],
+                    prefix='%s/%s' % (prefix, child_node_name)
                 )
+
             elif isinstance(pattern, RegexURLPattern) and self._is_drf_pattern(pattern):
-                api_endpoint = Endpoint(pattern)
-                parent_node[api_endpoint.path] = api_endpoint
+                api_endpoint = Endpoint(pattern, prefix)
+                parent_node[api_endpoint.name] = api_endpoint
 
 
 

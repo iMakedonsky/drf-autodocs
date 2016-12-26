@@ -1,0 +1,13 @@
+<ul class="field-list">
+    {% for field in fields %}
+    <li>
+        {{ field.name }}: {{ field.type }}
+        {% if field.required %}
+            <span class="new badge red" data-badge-caption="">Required</span>
+        {% endif %}
+        {% if field.sub_fields %}
+            {% include "drf_autodocs/components/fields_list.html" with fields=field.sub_fields %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

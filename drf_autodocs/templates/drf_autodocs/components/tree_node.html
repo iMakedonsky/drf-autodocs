@@ -1,0 +1,36 @@
+{% load autodocs_filters %}
+
+<ul class="endpoints-list collapsible" data-collapsible="accordion">
+{% for url_name, endpoint in endpoints_tree.items %}
+    <li>
+        {% if not endpoint|is_endpoint %}
+            <h4>{{ url_name }}</h4>
+                {% include 'drf_autodocs/components/tree_node.html' with endpoints_tree=endpoint %}
+        {% else %}
+            <div class="collapsible-header">
+                <i class="large material-icons">swap_horiz</i>
+                {{ endpoint.complete_path }}
+                <div class="right">
+                    {% for method in endpoint.methods %}
+                        <a class="waves-effect waves-light btn {{ method|lower }}">{{ method }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="collapsible-body">
+                <div class="card-panel blue">{{ endpoint.docstring|markdownify|keep_formatting }}</div>
+                <p>{% if endpoint.output_fields %}Request{% endif %} Fields:</p>
+
+                {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields %}
+
+                {% if endpoint.output_fields %}
+                    <p>Response fields:</p>
+
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields %}
+
+                {% endif %}
+
+            </div>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
