@@ -51,7 +51,9 @@ class BookUpdateSerializer(serializers.ModelSerializer):
         return LibrarySerializer(instance.library)
 ```
 
-Now to know what return format is, one must make a request. This package simplifies it via
+Now to know what return format is, one must make a request.
+This package simplifies it via:
+
 `response_serializer_class = YourSerializer`
 
 Now your view looks like:
