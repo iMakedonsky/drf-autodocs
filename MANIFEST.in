@@ -1,6 +1,5 @@
 include README.md
 include LICENSE
-include MANIFEST.in
 
 recursive-exclude drf_autodocs/static *
 recursive-exclude drf_autodocs/templates *

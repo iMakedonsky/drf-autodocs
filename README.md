@@ -69,6 +69,16 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     queryset = Book.objects.all()
 ```
 
+# Customization
+To change application look & feel, override
+
+`templates/drf_autodocs/index.html`
+
+
+For additional parsers(if you want other structure than tree), inherit from
+
+ `drf_autodocs.parser.BaseAPIParser`
+
 
 
 ### Supports
