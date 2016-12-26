@@ -9,6 +9,14 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * choice field options
  * specify MethodField output type for docs
 
+What isn't supported yet:
+
+ * possibility to try in browser
+ * permission listing
+ * tokens
+ * content types
+
+
 # Examples
 ![drf-autodocs](http://joxi.net/VrwzKWSO8BOkAX.jpg)
 
@@ -32,6 +40,12 @@ In your urls:
         url(r'^', include('drf_autodocs.urls')),
     ]
 
+That's already enough for swagger-like docs,
+result available on
+
+`localhost:8000/docs/`
+
+If you want some more features, read below.
 
 # Usage
 
@@ -84,9 +98,9 @@ For additional parsers(if you want other structure than tree), inherit from
 
 
 ### Supports
-  - Python (3.4, 3.5)
-  - Django (1.8, 1.9, 1.10)
-  - Django Rest Framework (3+)
+  - Python 3(Not tested on 2, though might work)
+  - Django 1.8+
+  - Django Rest Framework 3+
 
 
 # Credits
