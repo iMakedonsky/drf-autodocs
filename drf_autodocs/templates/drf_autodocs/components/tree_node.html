@@ -1,13 +1,14 @@
 {% load autodocs_filters %}
 
-<ul class="endpoints-list collapsible" data-collapsible="accordion">
+<ul class="endpoints-list tree tree-list">
 {% for url_name, endpoint in endpoints_tree.items %}
-    <li>
+    <li class="tree-list-item">
         {% if not endpoint|is_endpoint %}
             <h4>{{ url_name }}</h4>
                 {% include 'drf_autodocs/components/tree_node.html' with endpoints_tree=endpoint %}
         {% else %}
-            <div class="collapsible-header">
+            <ul class="collapsible"><li>
+            <div class="collapsible-header waves-effect">
                 <i class="large material-icons">swap_horiz</i>
                 {{ endpoint.complete_path }}
                 <div class="right">
@@ -28,8 +29,8 @@
                     {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields %}
 
                 {% endif %}
-
             </div>
+            </li></ul>
         {% endif %}
     </li>
 {% endfor %}
