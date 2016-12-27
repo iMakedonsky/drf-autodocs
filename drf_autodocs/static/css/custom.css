@@ -83,7 +83,6 @@ body {
     margin:0 0 0 1em; /* indentation */
     padding:0;
     list-style:none;
-    color:#369;
     position:relative;
 }
 
@@ -98,14 +97,14 @@ body {
     top:0;
     bottom:0;
     left:0;
-    border-left:1px solid;
+    border-left: 3px solid;
 }
 
 .tree li.tree-list-item {
     margin:0;
     padding:0 1.5em; /* indentation + .5em */
-    line-height:2em; /* default list item's `line-height` */
-    font-weight:bold;
+    /*line-height: 2em; !* default list item's `line-height` *!*/
+    /*font-weight:bold;*/
     position:relative;
 }
 
@@ -114,8 +113,8 @@ body {
     display:block;
     width:10px; /* same with indentation */
     height:0;
-    border-top:1px solid;
-    margin-top:-1px; /* border top width */
+    border-top:3px solid;
+    margin-top:-3px; /* border top width */
     position:absolute;
     top:1em; /* (line-height/2) */
     left:0;
