@@ -18,7 +18,7 @@ setup(
         'djangorestframework>=3.5'
     ],
     classifiers=[
-        'Development Status :: 5 - Development/Unstable',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
