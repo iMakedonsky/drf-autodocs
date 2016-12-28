@@ -1,4 +1,5 @@
 # Django REST framework auto docs
+### What is it
 DRF Auto Docs is an extension of [drf-docs](https://github.com/manosim/django-rest-framework-docs).
 In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs) features provides:
 
@@ -19,9 +20,34 @@ What isn't supported yet:
  * tokens
  * content types
 
+Why use this?
 
-# Examples
-![drf-autodocs](http://joxi.net/VrwzKWSO8BOkAX.jpg)
+ * keeps project and documentation synchronized without any efforts
+ * it's as DRY as django/rest_framework themselves
+
+
+
+# Samples
+Whole structure:
+
+![whole structure](http://joxi.net/LmGnYqhelBEWrl.jpg)
+
+
+Single node:
+
+![single node](http://joxi.net/E2ppYWh9GvEW2Y.jpg)
+
+Choices:
+
+![choices](http://joxi.net/12M5L7CMkgyb2J.jpg)
+
+Nested items:
+
+![nested items](http://joxi.net/brRK3EhJOBZdm1.jpg)
+
+Help text:
+
+![help text](http://joxi.net/n2YXyRsoekWNm6.jpg)
 
 # Installation
 In virtualenv:
@@ -99,6 +125,8 @@ Note that response_serializer_class is optional.
 
 Now it should look like
 ```python
+from drf_autodocs.decorators import document_serializer_classes
+
 @document_serializer_classes(serializer_class=BookSerializer, response_serializer_class=LibrarySerializer)
 @api_view(['GET', 'POST', 'DELETE'])
 def hello_world(request):
