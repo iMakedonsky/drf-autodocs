@@ -8,6 +8,7 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * markdown in docstrings
  * choice field options
  * specify MethodField output type for docs
+ * specify if field is read_only or required
 
 What isn't supported yet:
 

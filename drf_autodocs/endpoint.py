@@ -41,6 +41,7 @@ class Endpoint:
                     sub_fields = self._get_serializer_fields(field) if isinstance(field, BaseSerializer) else None
                 field_data = {
                     "name": key,
+                    "read_only": field.read_only,
                     "type": str(field.__class__.__name__),
                     "sub_fields": sub_fields,
                     "required": field.required,

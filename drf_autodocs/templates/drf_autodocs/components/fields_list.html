@@ -1,34 +1,42 @@
 {% load autodocs_filters %}
-
+<div class="fields-wrapper json-container purple darken-2">
+{
 <ul class="field-list">
     {% for field in fields %}
     <li>
-        {{ field.name }}: {{ field.type }}
+        <span>{{ field.name }}: {{ field.type }}{% if not forloop.last %},{% endif %}</span>
         {% if field|is_method_field %}
              >> {{ field.help_text }}
         {% endif %}
-        {% if field.required %}
+        {% if field.read_only or is_response_fields %}
+            <span class="new badge green" data-badge-caption="">Read only</span>
+        {% elif field.required %}
             <span class="new badge red" data-badge-caption="">Required</span>
         {% endif %}
         {% if field.choices %}
-            <table class="bordered choice-table push-right">
-                <thead>
-                    <th>Value</th>
-                    <th>Verbose Meaning</th>
-                </thead>
-                <tbody>
+            <span class="new badge lime" data-badge-caption="">
+                <a class='dropdown-button' data-activates='dropdown-{{ field.name }}'>Choices</a>
+                <ul id='dropdown-{{ field.name }}' class='dropdown-content choices'>
+                    <li><a class="choices-header">Value : Meaning</a></li>
+                    <li class="divider"></li>
+                    <li class="divider"></li>
                     {% for choice in field.choices.items %}
-                    <tr>
-                        <td>{{ choice.0 }}</td>
-                        <td>{{ choice.1 }}</td>
-                    </tr>
+                        <li><a>{{ choice.0 }}: {{ choice.1 }}</a></li>
                     {% endfor %}
-                </tbody>
-            </table>
+                </ul>
+            </span>
         {% endif %}
         {% if field.sub_fields %}
-            {% include "drf_autodocs/components/fields_list.html" with fields=field.sub_fields %}
+            <div class="subfields-wrapper">
+                <span class="new badge red" data-badge-caption="">Item structure</span>
+                <div class="subfields">
+                    {% include "drf_autodocs/components/fields_list.html" with fields=field.sub_fields %}
+                </div>
+            </div>
         {% endif %}
+
     </li>
     {% endfor %}
 </ul>
+}
+</div>
