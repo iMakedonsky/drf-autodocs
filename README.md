@@ -43,15 +43,17 @@ In your urls:
         url(r'^', include('drf_autodocs.urls')),
     ]
 
+
 That's already enough for swagger-like docs,
 result available on
 
 `localhost:8000/docs/`
 
-If you want some more features, read below.
+If you want functional views support and some more features, read below.
 
 # Usage
 
+### Class-Based views
 Say you have a view like this:
 ```python
 class BookReadUpdateHandler(RetrieveUpdateAPIView):
@@ -87,6 +89,26 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     response_serializer_class = LibrarySerializer
     queryset = Book.objects.all()
 ```
+
+###Function-based views
+For functional views, decorate them with.
+
+`drf_autodocs.decorators.document_serializer_classes`
+
+Note that response_serializer_class is optional.
+
+Now it should look like
+```python
+@document_serializer_classes(serializer_class=BookSerializer, response_serializer_class=LibrarySerializer)
+@api_view(['GET', 'POST', 'DELETE'])
+def hello_world(request):
+    """
+    Works for `functional` views too!
+    Yeah, that thing rocks!
+    """
+    return Response('hello_world response')
+```
+
 
 # Customization
 To change application look & feel, override
