@@ -29,16 +29,8 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
 <script>
-    $('.dropdown-button').dropdown({
-            inDuration: 300,
-            outDuration: 225,
-            constrain_width: false, // Does not change width of dropdown to that of the activator
-            hover: true, // Activate on hover
-            gutter: 0, // Spacing from edge
-            belowOrigin: true, // Displays dropdown below the button
-            alignment: 'left' // Displays dropdown with edge aligned to the left of button
-        }
-    );
+
+{#    collapse interface for ListSerializer #}
     $('.subfields-wrapper > .badge').click(function(){
         var subfields = $(this).next();
         if (subfields.is(':visible')) {
@@ -47,6 +39,27 @@
             subfields.show(300);
         }
     });
+
+
+{#    dynamically activate dropdowns as they need to have unique ids    #}
+    var buttons = $('a.dropdown-button');
+    var dropdowns = $('ul.dropdown-content');
+    for (var i=0; i<buttons.length; i++) {
+        console.log(buttons);
+        buttons[i].setAttribute('data-activates', 'dropdown-' + i);
+        dropdowns[i].id = 'dropdown-' + i;
+    }
+    buttons.dropdown({
+            inDuration: 300,
+            outDuration: 225,
+            constrain_width: false, // Does not change width of dropdown to that of the activator
+            hover: true, // Activate on hover
+            gutter: 0, // Spacing from edge
+            belowOrigin: false, // Displays dropdown below the button
+            alignment: 'left' // Displays dropdown with edge aligned to the left of button
+        }
+    );
+
 </script>
 </body>
 </html>

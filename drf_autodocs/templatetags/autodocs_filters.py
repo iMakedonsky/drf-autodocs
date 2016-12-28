@@ -36,3 +36,9 @@ def is_endpoint(obj):
 @register.filter()
 def is_method_field(obj):
     return obj['type'] == 'SerializerMethodField'
+
+
+@register.filter()
+def add_one(value):
+    data = value + 1
+    return data

@@ -5,9 +5,6 @@
     {% for field in fields %}
     <li>
         <span>{{ field.name }}: {{ field.type }}{% if not forloop.last %},{% endif %}</span>
-        {% if field|is_method_field %}
-             >> {{ field.help_text }}
-        {% endif %}
         {% if field.read_only or is_response_fields %}
             <span class="new badge green" data-badge-caption="">Read only</span>
         {% elif field.required %}
@@ -15,8 +12,8 @@
         {% endif %}
         {% if field.choices %}
             <span class="new badge lime" data-badge-caption="">
-                <a class='dropdown-button' data-activates='dropdown-{{ field.name }}'>Choices</a>
-                <ul id='dropdown-{{ field.name }}' class='dropdown-content choices'>
+                <a class='dropdown-button' data-activates=''>Choices</a>
+                <ul id='' class='dropdown-content choices'>
                     <li><a class="choices-header">Value : Meaning</a></li>
                     <li class="divider"></li>
                     <li class="divider"></li>
@@ -34,7 +31,11 @@
                 </div>
             </div>
         {% endif %}
-
+        {% if field.help_text %}
+            <span class="new badge red" data-badge-caption="">
+            <a class="tooltipped white-text" data-position="bottom" data-delay="50" data-tooltip="{{ field.help_text }}">Help Text</a>
+            </span>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
