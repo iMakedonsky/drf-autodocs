@@ -1,5 +1,5 @@
 include README.md
 include LICENSE
 
-recursive-exclude drf_autodocs/static *
-recursive-exclude drf_autodocs/templates *
+recursive-include drf_autodocs/static *
+recursive-include drf_autodocs/templates *
