@@ -3,7 +3,6 @@ from inspect import getdoc
 from django.contrib.admindocs.views import simplify_regex
 
 
-
 class Endpoint:
 
     def __init__(self, pattern, prefix=None):

@@ -7,6 +7,7 @@ library_urlpatterns = [
     url(r'^books/', library_views.BooksHandler.as_view(), name='books'),
     url(r'^books/(?P<pk>\d+)/$', library_views.BookReadUpdateHandler.as_view(), name='book_read_update'),
     url(r'^libraries/', library_views.LibrariesHandler.as_view(), name='libraries'),
+    url(r'hello-world/$', library_views.hello_world, name='hello-world')
 ]
 
 university_urlpatterns = [
