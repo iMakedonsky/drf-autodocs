@@ -3,15 +3,17 @@ DRF Auto Docs is an extension of [drf-docs](https://github.com/manosim/django-re
 In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs) features provides:
 
  * optional response fields(if input is different from output)
+ * functional view input/output documentation
  * tree-like structure
  * preserves formatting(spaces & new lines) in docstrings
  * markdown in docstrings
  * choice field options
- * specify MethodField output type for docs
- * specify if field is read_only or required
+ * fields' help_text (to specify SerializerMethodField output, for example)
+ * read_only/required rendering
 
 What isn't supported yet:
 
+ * viewsets
  * possibility to try in browser
  * permission listing
  * tokens
