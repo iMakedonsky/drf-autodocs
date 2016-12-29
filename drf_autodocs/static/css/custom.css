@@ -9,6 +9,7 @@ code {
 }
 .field-list > li {
     margin-left: 30px;
+    width: 100%;
 }
 .field-list > li > * {
     vertical-align: top;
@@ -19,6 +20,9 @@ code {
 span.badge {
     vertical-align: top;
     top: 2px;
+}
+span.badge > a {
+    vertical-align: top;
 }
 .collapsible-body p {
     padding: 0;
@@ -34,6 +38,9 @@ span.badge {
 .collapsible-header {
     border: 0;
     box-shadow: 0 0 3px 2px rgba(255,255,255,1);
+    z-index: auto;
+}
+.collapsible span.badge.new {
     z-index: auto;
 }
 
@@ -82,6 +89,7 @@ div.subfields-wrapper {
 .choices.active {
     background: #c236c0 !important;
     border-radius: 0 10px 10px 10px;
+    width: auto !important;
 }
 .choices-header {
     font-weight: bolder;

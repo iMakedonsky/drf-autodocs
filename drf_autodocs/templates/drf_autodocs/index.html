@@ -45,7 +45,6 @@
     var buttons = $('a.dropdown-button');
     var dropdowns = $('ul.dropdown-content');
     for (var i=0; i<buttons.length; i++) {
-        console.log(buttons);
         buttons[i].setAttribute('data-activates', 'dropdown-' + i);
         dropdowns[i].id = 'dropdown-' + i;
     }

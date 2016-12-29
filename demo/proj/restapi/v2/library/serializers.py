@@ -23,7 +23,7 @@ class LibrarySerializer(serializers.ModelSerializer):
     has_books = serializers.SerializerMethodField(help_text='returns Bool')
 
     class Meta:
-        fields = ('books', 'has_books', 'name', 'type')
+        fields = ('type', 'books', 'has_books', 'name')
         model = Library
 
     def get_has_books(self, instance):

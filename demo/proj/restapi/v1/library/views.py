@@ -13,6 +13,7 @@ from .request_response_examples import request_example, response_example
 from library.models import Book, Library
 
 
+# works for badly-designed views too
 class BooksHandler(APIView):
     def get(self, request, *args, **kwargs):
         return Response(status=200, data="This works for bad-designed views too!")
