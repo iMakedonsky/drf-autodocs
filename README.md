@@ -8,46 +8,68 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * tree-like structure
  * preserves formatting(spaces & new lines) in docstrings
  * markdown in docstrings
- * choice field options
+ * choice field options rendering
  * fields' help_text (to specify SerializerMethodField output, for example)
  * read_only/required rendering
+ * possibility to expand docstrings while keeping them short(docstring formatting)
 
-What isn't supported yet:
+### What isn't supported yet:
 
  * viewsets
  * possibility to try in browser
  * permission listing
- * tokens
+ * auth classes
  * content types
 
-Why use this?
+### Why use this?
 
- * keeps project and documentation synchronized without any efforts
- * it's as DRY as django/rest_framework themselves
+ * keeps project and documentation synchronized without any effort
+ * fills those nasty gaps, that made django-rest-swagger/drf-docs unusable in practice
 
 
 
 # Samples
-Whole structure:
+
+### Whole structure:
 
 ![whole structure](http://joxi.net/LmGnYqhelBEWrl.jpg)
 
-
-Single node:
+### Single node:
 
 ![single node](http://joxi.net/E2ppYWh9GvEW2Y.jpg)
 
-Choices:
+### Choices:
 
 ![choices](http://joxi.net/12M5L7CMkgyb2J.jpg)
 
-Nested items:
+### Nested items:
 
 ![nested items](http://joxi.net/brRK3EhJOBZdm1.jpg)
 
-Help text:
+### Help text:
 
 ![help text](http://joxi.net/n2YXyRsoekWNm6.jpg)
+
+### Docstring formatting:
+
+```python
+@format_docstring(request_example, response_example=response_example)
+class BookReadUpdateHandler(RetrieveUpdateAPIView):
+    """
+    Wow, this magic decorator allows us to:
+        1) Keep clean & short docstring
+        2) Insert additional data in it, like request/response examples
+
+    Request: {}
+    Response: {response_example}
+    """
+    serializer_class = BookUpdateSerializer
+```
+
+### Produces:
+
+![help text](http://joxi.net/1A5GqQTnbkbRmE.jpg)
+
 
 # Installation
 In virtualenv:
@@ -116,7 +138,8 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     queryset = Book.objects.all()
 ```
 
-###Function-based views
+### Function-based views
+
 For functional views, decorate them with.
 
 `drf_autodocs.decorators.document_serializer_classes`
@@ -135,6 +158,28 @@ def hello_world(request):
     Yeah, that thing rocks!
     """
     return Response('hello_world response')
+```
+
+### Docstring formatting
+
+```python
+from .request_response_examples import request_example, response_example
+from drf_autodocs.decorators import format_docstring
+
+
+@format_docstring(request_example, response_example=response_example)
+class BookReadUpdateHandler(RetrieveUpdateAPIView):
+    """
+    Wow, this magic decorator allows us to:
+        1) Keep clean & short docstring
+        2) Insert additional data in it, like request/response examples
+
+    Request: {}
+    Response: {response_example}
+    """
+    serializer_class = BookUpdateSerializer
+    response_serializer_class = LibrarySerializer
+    queryset = Book.objects.all()
 ```
 
 
