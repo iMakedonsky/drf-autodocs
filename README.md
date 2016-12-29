@@ -160,6 +160,17 @@ def hello_world(request):
     return Response('hello_world response')
 ```
 
+### Help text
+
+This package uses default field attribute `help_text`
+So, to make it available in docs simply implement it in field of serializer
+
+Example:
+
+```python
+has_books = serializers.SerializerMethodField(help_text='returns Bool')
+```
+
 ### Docstring formatting
 
 ```python
