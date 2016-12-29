@@ -11,8 +11,9 @@ class Endpoint:
         self.methods = self._get_allowed_methods()
         self.complete_path = self._get_complete_path(pattern, prefix)
         self.name = pattern.name
-        self.input_fields = self._get_serializer_fields(self.view.cls.serializer_class())
         self.docstring = getdoc(self.view.cls)
+        if hasattr(self.view.cls, 'serializer_class'):
+            self.input_fields = self._get_serializer_fields(self.view.cls.serializer_class())
         if hasattr(self.view.cls, 'response_serializer_class'):
             self.output_fields = self._get_serializer_fields(self.view.cls.response_serializer_class())
 

@@ -19,14 +19,22 @@
             </div>
             <div class="collapsible-body">
                 <div class="card-content">
-                    <div class="card-title"><h4>Docstring:</h4></div>
-                    <div class="json-container purple darken-2">
-                        {{ endpoint.docstring|markdownify|keep_formatting }}
-                    </div>
+                    {% if endpoint.docstring %}
+                        <div class="card-title"><h4>Docstring:</h4></div>
+                        <div class="json-container purple darken-2">
+                            {{ endpoint.docstring|markdownify|keep_formatting }}
+                        </div>
+                    {% else %}
+                        <div class="card-title"><h4>No docstring specified</h4></div>
+                    {% endif %}
                 </div>
                 <br/>
-                <h4>{% if endpoint.output_fields %}Request{% endif %} Fields:</h4>
-                {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields %}
+                {% if endpoint.input_fields %}
+                    <h4>{% if endpoint.output_fields %}Request{% endif %} Fields:</h4>
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields %}
+                {% else %}
+                    <h4>No Fields specified</h4>
+                {% endif %}
                 <br/>
                 {% if endpoint.output_fields %}
                     <h4>Response fields:</h4>

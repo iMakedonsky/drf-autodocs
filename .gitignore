@@ -2,5 +2,6 @@
 .idea/
 example/
 db.sqlite3
+build/
 
 drf_autodocs.egg-info/
