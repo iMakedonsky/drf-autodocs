@@ -1,4 +1,4 @@
-django==1.10
-djangorestframework==3.5
+django>=1.8
+djangorestframework>=3.0
 markdown==2.6.7
 addict==2.0.0
