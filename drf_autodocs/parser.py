@@ -49,10 +49,10 @@ class TreeAPIParser(BaseAPIParser):
     def parse_tree(self, urlpatterns, parent_node, prefix=''):
         for pattern in urlpatterns:
             if isinstance(pattern, RegexURLResolver):
-                child_node_name = simplify_regex(pattern._regex).strip('/')
+                child_node_name = simplify_regex(pattern._regex).strip('/') if pattern._regex else ""
                 self.parse_tree(
                     urlpatterns=pattern.url_patterns,
-                    parent_node=parent_node[child_node_name],
+                    parent_node=parent_node[child_node_name] if child_node_name else parent_node,
                     prefix='%s/%s' % (prefix, child_node_name)
                 )
 
