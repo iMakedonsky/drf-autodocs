@@ -2,7 +2,7 @@ from rest_framework.serializers import BaseSerializer, ChoiceField, RelatedField
 from rest_framework.filters import SearchFilter
 from inspect import getdoc
 from django.contrib.admindocs.views import simplify_regex
-import builtin_docs
+from drf_autodocs import builtin_docs
 
 
 class Endpoint:
