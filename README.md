@@ -3,60 +3,56 @@
 DRF Auto Docs is an extension of [drf-docs](https://github.com/manosim/django-rest-framework-docs).
 In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs) features provides:
 
- * optional response fields(if input is different from output)
- * functional view input/output documentation
+ * functional view docs
  * tree-like structure
- * preserves formatting(spaces & new lines) in docstrings
- * markdown in docstrings
- * choice field options rendering
- * fields' help_text (to specify SerializerMethodField output, for example)
- * read_only/required rendering
- * documents filter_backends
- * documents authentication_classes
- * documents permission_classes
- * document extra url params(GET params)
- * possibility to expand docstrings while keeping them short(docstring formatting)
- * smartly removes read-only fields from request serializer
+ * Docstrings:
+  * markdown
+  * preserve space & newlines
+  * formatting with nice syntax
+ * Fields:
+  * choices rendering
+  * help_text (to specify SerializerMethodField output, etc)
+  * smart read_only/required rendering
+ * Endpoint properties:
+  * filter_backends
+  * authentication_classes
+  * permission_classes
+  * extra url params(GET params)
 
 ### What isn't supported yet:
 
  * viewsets
  * possibility to try in browser
- * permission listing
- * auth classes
- * content types
 
 ### Why use this?
 
- * keeps project and documentation synchronized without any effort
+ * generates almost whole documentation from your code
  * fills those nasty gaps, that made django-rest-swagger/drf-docs unusable in practice
-
 
 
 # Samples
 
-### Whole structure:
+#### Whole structure:
 
-![whole structure](http://joxi.net/LmGnYqhelBEWrl.jpg)
+![whole structure](http://joxi.ru/52aBGNI4k3oyA0.jpg)
 
-### Single node:
+#### Single node:
 
-![single node](http://joxi.net/E2ppYWh9GvEW2Y.jpg)
+![single node](http://joxi.ru/L21G7pT80y9drX.jpg)
 
-### Choices:
+#### Choices:
 
-![choices](http://joxi.net/12M5L7CMkgyb2J.jpg)
+![choices](http://joxi.ru/zAN6KpuBjzP4A9.jpg)
 
-### Nested items:
+#### Nested items:
 
-![nested items](http://joxi.net/brRK3EhJOBZdm1.jpg)
+![nested items](http://joxi.ru/BA0GynTJp7DB2y.jpg)
 
-### Help text:
+#### Help text:
 
-![help text](http://joxi.net/n2YXyRsoekWNm6.jpg)
+![help text](http://joxi.ru/MAjBv7I4kKQjAe.jpg)
 
-### Docstring formatting:
-
+#### Docstring formatting:
 ```python
 @format_docstring(request_example, response_example=response_example)
 class BookReadUpdateHandler(RetrieveUpdateAPIView):
@@ -68,12 +64,8 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     Request: {}
     Response: {response_example}
     """
-    serializer_class = BookUpdateSerializer
 ```
-
-### Produces:
-
-![help text](http://joxi.net/1A5GqQTnbkbRmE.jpg)
+![help text](http://joxi.ru/VrwzKWSO4YekAX.jpg)
 
 
 # Installation
@@ -147,28 +139,42 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
 
 For functional views, decorate them with.
 
-`drf_autodocs.decorators.document_serializer_classes`
+`drf_autodocs.decorators.document_func_view`
 
-Note that response_serializer_class is optional.
+Now you can insert into view via kwargs:
 
-Now it should look like
+ * serializer_class
+ * response_serializer_class
+ * filter_backends
+ * authentication_classes
+ * permission_classes
+ * doc_format_args
+ * doc_format_kwargs
+
+Now it should look like:
 ```python
-from drf_autodocs.decorators import document_serializer_classes
+from drf_autodocs.decorators import document_func_view
 
-@document_serializer_classes(serializer_class=BookSerializer, response_serializer_class=LibrarySerializer)
+format_args = ['"This string\nwas inserted"',]
+
+@document_func_view(serializer_class=BookSerializer,
+                    response_serializer_class=LibrarySerializer,
+                    doc_format_args=format_args)
 @api_view(['GET', 'POST', 'DELETE'])
 def hello_world(request):
     """
     Works for `functional` views too!
-    Yeah, that thing rocks!
+        Yeah, that thing rocks!
+        And allows formatting {}
     """
     return Response('hello_world response')
 ```
 
 ### Help text
 
-This package uses default field attribute `help_text`
-So, to make it available in docs simply implement it in field of serializer
+This package uses default DRF field attribute `help_text`
+If you're using `ModelSerializer`, and model field got `help_text` attr, it will be
+transferred to your serializers' field automatically.
 
 Example:
 
@@ -199,9 +205,30 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
 ```
 
 
-# Customization
-To change application look & feel, override
+### Extra URL(GET) parameters
+Please think twice before using such parameters, as they might be unneeded.
 
+But if you really need them, here you go:
+
+```python
+class LibrariesHandler(ListCreateAPIView):
+    """
+    Shiny and nice docstring, which:
+        1) allows formatting
+        2) `allows markdown`
+    """
+    extra_url_params = (('show_all', 'Bool', 'if True returns all instances and only 5 otherwise'),
+                        ('some_extra_param', 'Integer', 'Something more to be included there'))
+```
+
+Results in:
+
+![extra_url_params](http://joxi.ru/E2ppYWh9GMzJ2Y.jpg)
+
+# Customization
+To change application look & feel, override templates and/or static files.
+
+Root template is :
 `templates/drf_autodocs/index.html`
 
 
@@ -219,4 +246,12 @@ For additional parsers(if you want other structure than tree), inherit from
 
 # Credits
 Thanks to [django](http://djangoproject.com), [django-REST](http://www.django-rest-framework.org/) for their awesome work,
-and [drf-docs](https://github.com/manosim/django-rest-framework-docs) for source of inspiration as well as some parts of code
+and [drf-docs](https://github.com/manosim/django-rest-framework-docs) for source of inspiration as well as some parts of code.
+
+
+Developed with care by Mashianov Oleksander at
+
+![extra_url_params](http://i63.tinypic.com/2h87nzm.png)
+
+
+If you :thumbsup: this, don't forget to :star: it and share with friends.

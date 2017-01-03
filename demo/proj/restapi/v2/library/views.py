@@ -7,7 +7,7 @@ from .serializers import (
     BookUpdateSerializer,
     LibrarySerializer
 )
-from library.models import Book, Library
+from library.models import Book
 
 from drf_autodocs.decorators import document_func_view
 
