@@ -9,7 +9,7 @@ from .serializers import (
 )
 from library.models import Book, Library
 
-from drf_autodocs.decorators import document_serializer_classes
+from drf_autodocs.decorators import document_func_view
 
 
 class BooksHandler(ListCreateAPIView):
@@ -33,22 +33,14 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     queryset = Book.objects.all()
 
 
-class LibrariesHandler(ListCreateAPIView):
-    """
-    Shiny and nice docstring, which:
-        1) allows formatting
-        2) `allows markdown`
-    """
-    serializer_class = LibrarySerializer
-    queryset = Library.objects.all()
-
-
-@document_serializer_classes(serializer_class=BookSerializer, response_serializer_class=LibrarySerializer)
+@document_func_view(serializer_class=BookSerializer, response_serializer_class=LibrarySerializer,
+                    doc_format_args=('"This string\nwas inserted"',))
 @api_view(['GET', 'POST', 'DELETE'])
 def hello_world(request):
     """
     Works for `functional` views too!
     Yeah, that thing rocks!
+    And allows formatting {}
     """
     return Response('hello_world response')
 

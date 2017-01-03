@@ -8,7 +8,7 @@
                 {% include 'drf_autodocs/components/tree_node.html' with endpoints_tree=endpoint %}
         {% else %}
             <ul class="collapsible"><li>
-            <div class="collapsible-header waves-effect main-color">
+            <div class="collapsible-header waves-effect waves-light main-color">
                 <i class="large material-icons">swap_horiz</i>
                 {{ endpoint.complete_path }}
                 <div class="right">
@@ -18,20 +18,132 @@
                 </div>
             </div>
             <div class="collapsible-body">
-                <div class="card-content">
-                    {% if endpoint.docstring %}
-                        <div class="card-title"><h4>Docstring:</h4></div>
-                        <div class="json-container purple darken-2">
+                <div class="row tabs-wrapper">
+                    <div class="col s12">
+                        <ul class="tabs">
+                            <li class="tab col">
+                                <a href="#{{ "descr-"|concat:endpoint.id }}">Description</a>
+                            </li>
+                            <li class="tab col {% if not endpoint.authentication_classes %}disabled{% endif %}">
+                                <a href="#{{ "auth-"|concat:endpoint.id }}">Authentication</a>
+                            </li>
+                            {% if endpoint.permission_classes %}
+                                <li class="tab col">
+                                    <a href="#{{ "perm-"|concat:endpoint.id }}">Permissions</a>
+                                </li>
+                            {% endif %}
+                            {% if endpoint.filter_backends %}
+                                <li class="tab col">
+                                    <a href="#{{ "filters-"|concat:endpoint.id }}">Filters</a>
+                                </li>
+                            {% endif %}
+                            {% if endpoint.extra_url_params %}
+                                <li class="tab col">
+                                    <a href="#{{ "extra_url_params-"|concat:endpoint.id }}">Extra URL Params</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div id="{{ "descr-"|concat:endpoint.id }}" class="col s12 tab-content">
+                        {% if endpoint.docstring %}
                             {{ endpoint.docstring|markdownify|keep_formatting }}
-                        </div>
-                    {% else %}
-                        <div class="card-title"><h4>No docstring specified</h4></div>
+                        {% else %}
+                            <div class="card-title"><h4>No docstring specified</h4></div>
+                        {% endif %}
+                    </div>
+                    {% if endpoint.authentication_classes %}
+                    <div id="{{ "auth-"|concat:endpoint.id }}" class="col s12 tab-content">
+                        <span>Action is allowed if any of these auth types is provided(logic OR)</span>
+                        <table class="responsive-table">
+                            <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cls in endpoint.authentication_classes %}
+                                <tr>
+                                    <td>{{ cls.0 }}</td>
+                                    <td>{{ cls.1|markdownify|keep_formatting }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% if endpoint.permission_classes %}
+                    <div id="{{ "perm-"|concat:endpoint.id }}" class="col s12 tab-content">
+                        <span>
+                            Action is allowed when all of conditions are satisfied(logic AND)
+                        </span>
+                        <table class="responsive-table">
+                            <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cls in endpoint.permission_classes %}
+                                <tr>
+                                    <td>{{ cls.0 }}</td>
+                                    <td>{{ cls.1|markdownify|keep_formatting }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% if endpoint.filter_backends %}
+                    <div id="{{ "filters-"|concat:endpoint.id }}" class="col s12 tab-content">
+                        <table class="responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Param name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for filter in endpoint.filter_backends%}
+                                <tr>
+                                    <td>{{ filter.0 }}</td>
+                                    <td>{{ filter.1|markdownify|keep_formatting }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% if endpoint.extra_url_params %}
+                    <div id="{{ "extra_url_params-"|concat:endpoint.id }}" class="col s12 tab-content">
+                        {% if endpoint.extra_url_params %}
+                            <table class="responsive-table">
+                                <thead>
+                                <tr>
+                                    <th>Param name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for param in endpoint.extra_url_params %}
+                                    <tr>
+                                        <td>{{ param.0 }}</td>
+                                        <td>{{ param.1 }}</td>
+                                        <td>{{ param.2|markdownify|keep_formatting }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </div>
                     {% endif %}
                 </div>
                 <br/>
                 {% if endpoint.input_fields %}
                     <h4>{% if endpoint.output_fields %}Request{% endif %} Fields:</h4>
-                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields %}
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields response_fields=endpoint.output_fields %}
                 {% else %}
                     <h4>No Fields specified</h4>
                 {% endif %}
@@ -39,7 +151,7 @@
                 {% if endpoint.output_fields %}
                     <h4>Response fields:</h4>
 
-                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields is_response_fields="True" %}
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields is_response_fields=True %}
                 {% endif %}
             </div>
             </li></ul>

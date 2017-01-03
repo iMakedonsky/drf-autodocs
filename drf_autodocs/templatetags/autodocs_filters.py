@@ -42,3 +42,11 @@ def is_method_field(obj):
 def add_one(value):
     data = value + 1
     return data
+
+
+@register.filter()
+def concat(value, s):
+    try:
+        return str(value) + str(s)
+    except (TypeError, ValueError):
+        return ""

@@ -11,7 +11,12 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * choice field options rendering
  * fields' help_text (to specify SerializerMethodField output, for example)
  * read_only/required rendering
+ * documents filter_backends
+ * documents authentication_classes
+ * documents permission_classes
+ * document extra url params(GET params)
  * possibility to expand docstrings while keeping them short(docstring formatting)
+ * smartly removes read-only fields from request serializer
 
 ### What isn't supported yet:
 

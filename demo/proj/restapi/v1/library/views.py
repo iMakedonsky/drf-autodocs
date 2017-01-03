@@ -1,11 +1,13 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissions
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from drf_autodocs.decorators import format_docstring
 
 
 from .serializers import (
-    BookSerializer,
     BookUpdateSerializer,
     LibrarySerializer
 )
@@ -40,7 +42,17 @@ class LibrariesHandler(ListCreateAPIView):
         1) allows formatting
         2) `allows markdown`
     """
+    authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
+    permission_classes = (IsAuthenticatedOrReadOnly, DjangoModelPermissions)
+    filter_backends = (OrderingFilter, SearchFilter)
+    search_filters = ('=name', '$type')
     serializer_class = LibrarySerializer
-    queryset = Library.objects.all()
+    extra_url_params = (('show_all', 'Bool', 'if True returns all instances and only 5 otherwise'),
+                        ('some_extra_param', 'Integer', 'Something more to be included there'))
 
+    def get_queryset(self):
+        if self.request.GET.get('show_all'):
+            return Library.objects.all()
+        else:
+            return Library.objects.all[:5]
 
