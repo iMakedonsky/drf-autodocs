@@ -43,7 +43,10 @@ class Endpoint:
         for f in self.view.cls.filter_backends:
             if f in builtin_docs.filter_backends:
                 if f is SearchFilter:
-                    doc = builtin_docs.filter_backends[f](self.view.cls.search_filters)
+                    if hasattr(self.view.cls, 'search_filters'):
+                        doc = builtin_docs.filter_backends[f](self.view.cls.search_filters)
+                    else:
+                        doc = "Developer didn't specify any fields for search"
                 else:
                     doc = builtin_docs.filter_backends[f]
                 self.filter_backends.append((f.__name__, doc))
