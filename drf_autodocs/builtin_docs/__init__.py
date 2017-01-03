@@ -1,5 +1,5 @@
 from rest_framework.filters import OrderingFilter, SearchFilter
-from util.rendering import render_fields_list
+from drf_autodocs.util.rendering import render_fields_list
 
 ordering_filter_docstring = """
 Orders objects according to value of some field.
