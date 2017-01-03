@@ -98,6 +98,39 @@ If you want functional views support and some more features, read below.
 
 # Usage
 
+### Tree-like structure
+
+Tree-like structure is built from url prefixes. To make your endpoints grouped by some
+category, you must include your urls within other url. There are, generally, 2 ways to achieve it:
+
+Example 1:
+
+```python
+university_urlpatterns = [
+    url(r'^lecturers/', university_views.LecturersHandler.as_view(), name='lecturers'),
+    url(r'^lecturers/(?P<pk>\d+)/$', university_views.LecturerUpdateHandler.as_view(), name='lecturer_read_update'),
+    url(r'^universities/', university_views.UniversitiesHandler.as_view(), name='universities'),
+]
+
+urlpatterns = [
+    url(r'^library/', include(library_urlpatterns, namespace='library')),
+    url(r'^university/', include(university_urlpatterns, namespace='university')),
+]
+```
+
+Example 2:
+```python
+urlpatterns = [
+    url(r'^library/', include(library_urlpatterns, namespace='library')),
+    url(r'^university/', include([
+        url(r'^lecturers/', university_views.LecturersHandler.as_view(), name='lecturers'),
+        url(r'^lecturers/(?P<pk>\d+)/$', university_views.LecturerUpdateHandler.as_view(), name='lecturer_read_update'),
+        url(r'^universities/', university_views.UniversitiesHandler.as_view(), name='universities')
+    ], namespace='university')),
+]
+```
+
+
 ### Class-Based views
 Say you have a view like this:
 ```python
