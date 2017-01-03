@@ -251,7 +251,7 @@ and [drf-docs](https://github.com/manosim/django-rest-framework-docs) for source
 
 Developed with care by Mashianov Oleksander at
 
-![extra_url_params](http://i63.tinypic.com/2h87nzm.png)
+[![buddhasoft](http://i63.tinypic.com/2h87nzm.png)](http://buddhasoft.net/)
 
 
 If you :thumbsup: this, don't forget to :star: it and share with friends.
