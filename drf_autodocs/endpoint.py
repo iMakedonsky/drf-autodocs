@@ -103,15 +103,27 @@ class Endpoint:
                     field_data['choices'] = field.choices
 
                 if isinstance(field, RelatedField):
-                    field_data['help_text'] = ('{}\nRequires/renders pk(id) of {} as integer'.format(
-                        field.help_text if field.help_text else "",
-                        field.queryset.model.__name__)
-                    )
+                    if hasattr(field, 'queryset') and hasattr(field.queryset, 'model'):
+                        field_data['help_text'] = ('{}\nRequires/renders pk(id) of {} as integer'.format(
+                            field.help_text if field.help_text else "",
+                            field.queryset.model.__name__)
+                        )
+                    elif hasattr(serializer.Meta.model, key):
+                        field_data['help_text'] = ('{}\nRequires/renders pk(id) of {} as integer'.format(
+                            field.help_text if field.help_text else "",
+                            getattr(serializer.Meta.model, key).field.related_model.__name__)
+                        )
                 elif isinstance(field, ManyRelatedField):
-                    field_data['help_text'] = ("{}\nRequires/renders list of pk's(id's) of {} objects.".format(
-                        field.help_text if field.help_text else "",
-                        field.child_relation.queryset.model.__name__)
-                    )
+                    if hasattr(field, 'queryset') and hasattr(field.queryset, 'model'):
+                        field_data['help_text'] = ("{}\nRequires/renders list of pk's(id's) of {} objects.".format(
+                            field.help_text if field.help_text else "",
+                            field.child_relation.queryset.model.__name__)
+                        )
+                    elif hasattr(serializer.Meta.model, key):
+                        field_data['help_text'] = ('{}\nRequires/renders pk(id) of {} as integer'.format(
+                            field.help_text if field.help_text else "",
+                            getattr(serializer.Meta.model, key).field.related_model.__name__)
+                        )
 
                 fields.append(field_data)
 
