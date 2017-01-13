@@ -94,12 +94,12 @@ class Endpoint:
                     field_data['choices'] = field.choices
 
                 if isinstance(field, RelatedField):
-                    field_data['help_text'] = ('{}\nRequires pk(id) of {} as integer'.format(
+                    field_data['help_text'] = ('{}\nRequires/renders pk(id) of {} as integer'.format(
                         field.help_text if field.help_text else "",
                         field.queryset.model.__name__)
                     )
                 elif isinstance(field, ManyRelatedField):
-                    field_data['help_text'] = ("{}\nRequires list of pk's(id's) of {} objects.".format(
+                    field_data['help_text'] = ("{}\nRequires/renders list of pk's(id's) of {} objects.".format(
                         field.help_text if field.help_text else "",
                         field.child_relation.queryset.model.__name__)
                     )
