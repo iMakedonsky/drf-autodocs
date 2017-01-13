@@ -1,18 +1,19 @@
 # Django REST framework auto docs
-### What is it
-DRF Auto Docs is an extension of [drf-docs](https://github.com/manosim/django-rest-framework-docs).
-In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs) features provides:
+Automated api documentation renderer
 
- * functional view docs
+### Features:
+
+ * optional response_serializer_class, if output serializer is different from input serializer
+ * fully-documented functional views
  * tree-like structure
  * Docstrings:
   * markdown
   * preserve space & newlines
   * formatting with nice syntax
  * Fields:
+  * different fields for request/response, based on read-/write-only attributes and whether response_serializer_class presented or not
   * choices rendering
-  * help_text (to specify SerializerMethodField output, etc)
-  * smart read_only/required rendering
+  * help_text rendering (to specify SerializerMethodField output, etc)
  * Endpoint properties:
   * filter_backends
   * authentication_classes
@@ -24,11 +25,6 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
  * viewsets
  * possibility to try in browser
 
-### Why use this?
-
- * generates almost whole documentation from your code
- * fills those nasty gaps, that made django-rest-swagger/drf-docs unusable in practice
-
 
 # Samples
 
@@ -38,19 +34,15 @@ In addition to [drf-docs](https://github.com/manosim/django-rest-framework-docs)
 
 #### Single node:
 
-![single node](http://joxi.ru/L21G7pT80y9drX.jpg)
+![single node](http://joxi.ru/E2ppYWh94VdV2Y.jpg)
 
 #### Choices:
 
-![choices](http://joxi.ru/zAN6KpuBjzP4A9.jpg)
+![choices](http://joxi.ru/D2PdaVspB1M423.jpg)
 
 #### Nested items:
 
-![nested items](http://joxi.ru/BA0GynTJp7DB2y.jpg)
-
-#### Help text:
-
-![help text](http://joxi.ru/MAjBv7I4kKQjAe.jpg)
+![nested items](http://joxi.ru/vAWOkRt1BKY4AW.jpg)
 
 #### Docstring formatting:
 ```python
@@ -65,10 +57,12 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     Response: {response_example}
     """
 ```
+
 ![help text](http://joxi.ru/VrwzKWSO4YekAX.jpg)
 
 
 # Installation
+
 In virtualenv:
 
     pip install drf_autodocs
@@ -131,7 +125,7 @@ urlpatterns = [
 ```
 
 
-### Class-Based views
+### Response serializer class
 Say you have a view like this:
 ```python
 class BookReadUpdateHandler(RetrieveUpdateAPIView):
@@ -167,6 +161,51 @@ class BookReadUpdateHandler(RetrieveUpdateAPIView):
     response_serializer_class = LibrarySerializer
     queryset = Book.objects.all()
 ```
+
+
+### Docstring formatting in class-based views
+
+```python
+from .request_response_examples import request_example, response_example
+from drf_autodocs.decorators import format_docstring
+
+
+@format_docstring(request_example, response_example=response_example)
+class BookReadUpdateHandler(RetrieveUpdateAPIView):
+    """
+    Wow, this magic decorator allows us to:
+        1) Keep clean & short docstring
+        2) Insert additional data in it, like request/response examples
+
+    Request: {}
+    Response: {response_example}
+    """
+    serializer_class = BookUpdateSerializer
+    response_serializer_class = LibrarySerializer
+    queryset = Book.objects.all()
+```
+
+
+### Extra URL(GET) parameters
+Please think twice before using such parameters, as they might be unneeded.
+
+But if you really need them, here you go:
+
+```python
+class LibrariesHandler(ListCreateAPIView):
+    """
+    Shiny and nice docstring, which:
+        1) allows formatting
+        2) `allows markdown`
+    """
+    extra_url_params = (('show_all', 'Bool', 'if True returns all instances and only 5 otherwise'),
+                        ('some_extra_param', 'Integer', 'Something more to be included there'))
+```
+
+Results in:
+
+![extra_url_params](http://joxi.ru/E2ppYWh9GMzJ2Y.jpg)
+
 
 ### Function-based views
 
@@ -212,51 +251,13 @@ transferred to your serializers' field automatically.
 Example:
 
 ```python
+from rest_framework import serializers
+
 has_books = serializers.SerializerMethodField(help_text='returns Bool')
 ```
 
-### Docstring formatting
+Note that specifying help_text on serializers' field overrides the one from model
 
-```python
-from .request_response_examples import request_example, response_example
-from drf_autodocs.decorators import format_docstring
-
-
-@format_docstring(request_example, response_example=response_example)
-class BookReadUpdateHandler(RetrieveUpdateAPIView):
-    """
-    Wow, this magic decorator allows us to:
-        1) Keep clean & short docstring
-        2) Insert additional data in it, like request/response examples
-
-    Request: {}
-    Response: {response_example}
-    """
-    serializer_class = BookUpdateSerializer
-    response_serializer_class = LibrarySerializer
-    queryset = Book.objects.all()
-```
-
-
-### Extra URL(GET) parameters
-Please think twice before using such parameters, as they might be unneeded.
-
-But if you really need them, here you go:
-
-```python
-class LibrariesHandler(ListCreateAPIView):
-    """
-    Shiny and nice docstring, which:
-        1) allows formatting
-        2) `allows markdown`
-    """
-    extra_url_params = (('show_all', 'Bool', 'if True returns all instances and only 5 otherwise'),
-                        ('some_extra_param', 'Integer', 'Something more to be included there'))
-```
-
-Results in:
-
-![extra_url_params](http://joxi.ru/E2ppYWh9GMzJ2Y.jpg)
 
 # Customization
 To change application look & feel, override templates and/or static files.
@@ -269,10 +270,26 @@ For additional parsers(if you want other structure than tree), inherit from
 
  `drf_autodocs.parser.BaseAPIParser`
 
+# Configuration/settings
+
+Endpoint names could use view names or url names, replacing '_' and '-' with ' ' and capitalizing output.
+
+Default behavior is to use url names:
+
+`url(r'^books/(?P<pk>\d+)/$', library_views.BookReadUpdateHandler.as_view(), name='book_read_update'),`
+
+will result in:
+
+![url_name](http://joxi.ru/Q2K1WDh4yXnGrj.jpg)
+
+If you want to use endpoint(view) names instead, do this in settings:
+
+`AUTODOCS_ENDPOINT_NAMES = "view"`
 
 
-### Supports
-  - Python 3(Not tested on 2, though might work)
+
+# Supports
+  - Python 3
   - Django 1.8+
   - Django Rest Framework 3+
 

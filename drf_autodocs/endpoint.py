@@ -18,10 +18,7 @@ class Endpoint:
         self.methods = self._get_allowed_methods()
         self.complete_path = self._get_complete_path(pattern, prefix)
 
-        if hasattr(settings, 'AUTODOCS_ENDPOINT_NAMES') and settings.AUTODOCS_ENDPOINT_NAMES == 'view':
-            self.name = self.view.__name__.replace('-', ' ').replace('_', ' ').capitalize()
-        else:
-            self.name = pattern.name.replace('-', ' ').replace('_', ' ').capitalize()
+        self.name = self._get_endpoint_name()
 
         if hasattr(self.view.cls, 'extra_url_params'):
             self.extra_url_params = self.view.cls.extra_url_params
@@ -42,6 +39,18 @@ class Endpoint:
 
         if hasattr(self.view.cls, 'response_serializer_class'):
             self.output_fields = self._get_serializer_fields(self.view.cls.response_serializer_class())
+
+    def _get_endpoint_name(self):
+        if hasattr(settings, 'AUTODOCS_ENDPOINT_NAMES') and settings.AUTODOCS_ENDPOINT_NAMES == 'view':
+            ret = ''.join(
+                [
+                    (' %s' % c if c.isupper() and not self.view.__name__.startswith(c) else c)
+                    for c in self.view.__name__
+                    ]
+            ).replace('-', ' ').replace('_', ' ').title()
+            return ret
+        else:
+            return self.pattern.name.replace('-', ' ').replace('_', ' ').title()
 
     def _collect_filter_backends(self):
         self.filter_backends = []
