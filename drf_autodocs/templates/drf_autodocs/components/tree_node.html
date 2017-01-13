@@ -19,6 +19,7 @@
             </div>
             <div class="collapsible-body">
                 <div class="row tabs-wrapper">
+                    <h3>{{ endpoint.name }}</h3>
                     <div class="col s12">
                         <ul class="tabs">
                             <li class="tab col">
@@ -141,17 +142,21 @@
                     {% endif %}
                 </div>
                 <br/>
+                <h4>Request Fields:</h4>
                 {% if endpoint.input_fields %}
-                    <h4>{% if endpoint.output_fields %}Request{% endif %} Fields:</h4>
-                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields response_fields=endpoint.output_fields %}
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields request_fields=True %}
                 {% else %}
-                    <h4>No input data required</h4>
+                    <h5>No input data specified</h5>
                 {% endif %}
                 <br/>
-                {% if endpoint.output_fields %}
-                    <h4>Response fields:</h4>
 
-                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields is_response_fields=True %}
+                <h4>Response Fields:</h4>
+                {% if endpoint.output_fields %}
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.output_fields response_fields=True %}
+                {% elif endpoint.input_fields %}
+                    {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields response_fields=True %}
+                {% else %}
+                    <h5>No output data specified</h5>
                 {% endif %}
             </div>
             </li></ul>

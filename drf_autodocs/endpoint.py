@@ -3,6 +3,7 @@ from rest_framework.filters import SearchFilter
 from inspect import getdoc
 from django.contrib.admindocs.views import simplify_regex
 from drf_autodocs import builtin_docs
+from django.conf import settings
 
 
 class Endpoint:
@@ -16,7 +17,11 @@ class Endpoint:
         self.view = pattern.callback
         self.methods = self._get_allowed_methods()
         self.complete_path = self._get_complete_path(pattern, prefix)
-        self.name = pattern.name
+
+        if hasattr(settings, 'AUTODOCS_ENDPOINT_NAMES') and settings.AUTODOCS_ENDPOINT_NAMES == 'view':
+            self.name = self.view.__name__.replace('-', ' ').replace('_', ' ').capitalize()
+        else:
+            self.name = pattern.name.replace('-', ' ').replace('_', ' ').capitalize()
 
         if hasattr(self.view.cls, 'extra_url_params'):
             self.extra_url_params = self.view.cls.extra_url_params
@@ -82,10 +87,23 @@ class Endpoint:
                     "sub_fields": sub_fields,
                     "required": field.required,
                     "to_many_relation": to_many_relation,
-                    "help_text": field.help_text
+                    "help_text": field.help_text,
+                    "write_only": field.write_only
                 }
                 if isinstance(field, ChoiceField) and not isinstance(field, (RelatedField, ManyRelatedField)):
                     field_data['choices'] = field.choices
+
+                if isinstance(field, RelatedField):
+                    field_data['help_text'] = ('{}\nRequires pk(id) of {} as integer'.format(
+                        field.help_text if field.help_text else "",
+                        field.queryset.model.__name__)
+                    )
+                elif isinstance(field, ManyRelatedField):
+                    field_data['help_text'] = ("{}\nRequires list of pk's(id's) of {} objects.".format(
+                        field.help_text if field.help_text else "",
+                        field.child_relation.queryset.model.__name__)
+                    )
+
                 fields.append(field_data)
 
         return fields

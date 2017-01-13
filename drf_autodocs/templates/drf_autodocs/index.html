@@ -48,8 +48,8 @@
                          &nbsp - click these to see nested items structure
                     </li>
                     <li>
-                        <span class="new badge green" data-badge-caption="">Read only</span>
-                         &nbsp - incoming values for these fields are ignored
+                        <span class="new badge red" data-badge-caption="">Required</span>
+                         &nbsp - without this field, endpoint wont work
                     </li>
                     <li>
                         <span class="new badge green" data-badge-caption="">
@@ -72,7 +72,8 @@
                 <p>In choices you'll see 2 things: <b>"value"</b> and <b>"meaning"</b>.</p>
                 <p>
                     <b>"Meaning"</b> is human-understandable description of value.
-                    It's used only for choice field rendering
+                    It's used only for choice field rendering, but doesn't take any part
+                    in logic/data processing.
                 </p>
             </div>
         </div>

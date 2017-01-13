@@ -3,14 +3,12 @@
 {
 <ul class="field-list">
     {% for field in fields %}
-        {% if not response_fields or not field.read_only and response_fields %}
+        {% if request_fields and not field.read_only or response_fields and not field.write_only %}
             <li>
                 <span>{{ field.name }}: {{ field.type }}{% if not forloop.last %},{% endif %}</span>
 
 
-                {% if field.read_only or is_response_fields %}
-                    <span class="new badge green" data-badge-caption="">Read only</span>
-                {% elif field.required %}
+                {% if field.required and request_fields %}
                     <span class="new badge delete" data-badge-caption="">Required</span>
                 {% endif %}
 
