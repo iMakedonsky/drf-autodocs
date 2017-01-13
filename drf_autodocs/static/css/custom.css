@@ -166,9 +166,7 @@ body {
 
 .tree li.tree-list-item {
     margin:0;
-    padding:0 1.5em; /* indentation + .5em */
-    /*line-height: 2em; !* default list item's `line-height` *!*/
-    /*font-weight:bold;*/
+    padding-left: 1.5em;
     position:relative;
 }
 

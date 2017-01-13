@@ -145,7 +145,7 @@
                     <h4>{% if endpoint.output_fields %}Request{% endif %} Fields:</h4>
                     {% include 'drf_autodocs/components/fields_list.html' with fields=endpoint.input_fields response_fields=endpoint.output_fields %}
                 {% else %}
-                    <h4>No Fields specified</h4>
+                    <h4>No input data required</h4>
                 {% endif %}
                 <br/>
                 {% if endpoint.output_fields %}
