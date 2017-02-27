@@ -3,5 +3,6 @@
 example/
 db.sqlite3
 build/
+dist/
 
 drf_autodocs.egg-info/
