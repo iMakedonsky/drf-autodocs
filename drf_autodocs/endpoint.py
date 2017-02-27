@@ -35,7 +35,10 @@ class Endpoint:
         self.docstring = getdoc(self.view.cls)
 
         if hasattr(self.view.cls, 'serializer_class') and self.view.cls.serializer_class is not None:
-            self.input_fields = self._get_serializer_fields(self.view.cls.serializer_class())
+            if not set(self.methods) == {'GET', 'OPTIONS'}:
+                self.input_fields = self._get_serializer_fields(self.view.cls.serializer_class())
+            else:
+                self.output_fields = self._get_serializer_fields(self.view.cls.serializer_class())
 
         if hasattr(self.view.cls, 'response_serializer_class'):
             self.output_fields = self._get_serializer_fields(self.view.cls.response_serializer_class())

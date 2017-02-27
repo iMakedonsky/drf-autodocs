@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -9,16 +9,18 @@ from drf_autodocs.decorators import format_docstring
 
 from .serializers import (
     BookUpdateSerializer,
-    LibrarySerializer
+    LibrarySerializer,
+    BookSerializer
 )
 from .request_response_examples import request_example, response_example
 from library.models import Book, Library
 
 
 # works for badly-designed views too
-class BooksHandler(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response(status=200, data="This works for bad-designed views too!")
+class BooksHandler(ListAPIView):
+    """bad-designed view"""
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
 
 
 @format_docstring(request_example, response_example=response_example)
