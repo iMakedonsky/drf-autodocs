@@ -15,7 +15,7 @@ class BookUpdateSerializer(serializers.ModelSerializer):
         model = Book
 
     def to_representation(self, instance):
-        return LibrarySerializer(instance.library)
+        return LibrarySerializer(instance.library).data
 
 
 class LibrarySerializer(serializers.ModelSerializer):
