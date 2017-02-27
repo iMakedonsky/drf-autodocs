@@ -32,7 +32,7 @@ class Endpoint:
         if hasattr(self.view.cls, 'permission_classes') and self.view.cls.permission_classes is not None:
             self.permission_classes = [(cls.__name__, getdoc(cls)) for cls in self.view.cls.permission_classes]
 
-        self.docstring = getdoc(self.view.cls)
+        self.docstring = self._get_doc()
 
         if hasattr(self.view.cls, 'serializer_class') and self.view.cls.serializer_class is not None:
             if not set(self.methods) == {'GET', 'OPTIONS'}:
@@ -42,6 +42,13 @@ class Endpoint:
 
         if hasattr(self.view.cls, 'response_serializer_class'):
             self.output_fields = self._get_serializer_fields(self.view.cls.response_serializer_class())
+
+    def _get_doc(self):
+        no_description = "No description provided by developer"
+        try:
+            return self.view.cls.__doc__ if self.view.cls.__doc__ is not None else no_description
+        except AttributeError:
+            return no_description
 
     def _get_endpoint_name(self):
         if hasattr(settings, 'AUTODOCS_ENDPOINT_NAMES') and settings.AUTODOCS_ENDPOINT_NAMES == 'view':

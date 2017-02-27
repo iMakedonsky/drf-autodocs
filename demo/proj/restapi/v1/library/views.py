@@ -18,7 +18,6 @@ from library.models import Book, Library
 
 # works for badly-designed views too
 class BooksHandler(ListAPIView):
-    """bad-designed view"""
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 
