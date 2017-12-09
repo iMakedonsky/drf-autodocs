@@ -5,7 +5,7 @@ try:
     from django.urls import URLPattern as RegexURLPattern
     from django.urls import URLResolver as RegexURLResolver
 except:
-    -from django.core.urlresolvers import RegexURLResolver, RegexURLPattern	    
+    from django.core.urlresolvers import RegexURLResolver, RegexURLPattern	    
 from addict import Dict
 from rest_framework.views import APIView
 from .endpoint import Endpoint
