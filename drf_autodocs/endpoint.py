@@ -85,7 +85,7 @@ class Endpoint:
 
     @staticmethod
     def _get_complete_path(pattern, prefix=None):
-        return prefix + simplify_regex(pattern._regex)
+        return prefix + simplify_regex(pattern.pattern._regex)
 
     def _get_serializer_fields(self, serializer):
         fields = []
