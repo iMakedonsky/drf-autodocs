@@ -1,7 +1,11 @@
 from django.conf import settings
 from importlib import import_module
 from django.utils.module_loading import import_string
-from django.urls.resolvers import RegexPattern, RoutePattern
+try:
+    from django.urls import URLPattern as RegexURLPattern
+    from django.urls import URLResolver as RegexURLResolver
+except:
+    from django.core.urlresolvers import RegexURLResolver, RegexURLPattern	    
 from addict import Dict
 from rest_framework.views import APIView
 from .endpoint import Endpoint
@@ -48,14 +52,25 @@ class TreeAPIParser(BaseAPIParser):
 
     def parse_tree(self, urlpatterns, parent_node, prefix=''):
         for pattern in urlpatterns:
-            if isinstance(pattern, RegexPattern):
-                child_node_name = simplify_regex(pattern._regex).strip('/') if pattern._regex else ""
+            if isinstance(pattern, RegexURLResolver):
+                try:
+                    regex = pattern._regex if hasattr(pattern, "_regex") else pattern.pattern._regex
+                except:
+                    regex = ""
+                child_node_name = simplify_regex(regex).strip('/') if regex else ""
                 self.parse_tree(
                     urlpatterns=pattern.url_patterns,
                     parent_node=parent_node[child_node_name] if child_node_name else parent_node,
                     prefix='%s/%s' % (prefix, child_node_name)
                 )
 
-            elif isinstance(pattern, RoutePattern) and self._is_drf_pattern(pattern):
+            elif isinstance(pattern, RegexURLPattern) and self._is_drf_pattern(pattern):
                 api_endpoint = Endpoint(pattern, prefix)
                 parent_node[api_endpoint.name] = api_endpoint
+
+
+
+
+
+
+
