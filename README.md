@@ -1,3 +1,5 @@
+*THIS REPO IS NO LONGER MAINTAINED. PLEASE CONSIDER OTHER AUTOMATED DOCUMENTATION PACKAGES*
+
 # Django REST framework auto docs
 Automated api documentation renderer
 
